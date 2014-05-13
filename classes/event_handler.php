@@ -15,6 +15,7 @@ class IFLYCHAT_CLASS_EventHandler
      *
      * @var AJAXIM_CLASS_EventHandler
      */
+
     private static $classInstance;
 
     /**
@@ -50,6 +51,11 @@ class IFLYCHAT_CLASS_EventHandler
 
         $im_toolbar = new IFLYCHAT_CMP_Toolbar();
         OW::getDocument()->appendBody($im_toolbar->render());
+    }
+
+    public function hi(){
+
+        return 'hi';
     }
 
 

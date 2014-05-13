@@ -8,6 +8,8 @@
  * @link https://iflychat.com
  */
 
+
+require_once(OW_DIR_PLUGIN.'iflychat'.DS.'helper.php');
 class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
 
     private $timers;
@@ -16,6 +18,8 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
 
     public function index()
     {
+
+        $obj = new iflychatHelper;
         $language = OW::getLanguage();
         $this->setPageHeading($language->text("iflychat", "iflychat_setting_page"));
         $this->setPageHeadingIconClass('ow_ic_gear_wheel');
@@ -32,7 +36,7 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
 
             $data = $form->getValues();
 
-            $variable_get = $this->params('iflychat_ext_d_i');
+            $variable_get = $obj->params('iflychat_ext_d_i');
 
 
             define('IFLYCHAT_EXTERNAL_HOST', 'http://api'.$variable_get.'.iflychat.com');
@@ -65,10 +69,10 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
             );
 
 
-            $d = json_encode($pdata);
+
             $options = array(
                 'method' => 'POST',
-                'data' => $d,
+                'data' => json_encode($pdata),
                 'timeout' => 15,
                 'headers' => array('Content-Type' => 'application/json'),
             );
@@ -77,7 +81,7 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
             $uri = IFLYCHAT_EXTERNAL_A_HOST . ':' . IFLYCHAT_EXTERNAL_A_PORT .  '/p/';
 
 
-                $this->iflychat_extended_http_request($uri, $options);
+            $obj->iflychat_extended_http_request($uri, $options);
 
             $form->process(json_encode($data));
 
@@ -153,384 +157,19 @@ $default = array(
 
                 $form->setValues($settingsArray);
                 $this->addForm($form);
-        }
-
-
-}
-
-
-
-
-}
-
-    private function iflychat_timer_read($name) {
-        //global $this->timers;
-
-        if (isset($this->timers[$name]['start'])) {
-            $stop = microtime(TRUE);
-            $diff = round(($stop - $this->timers[$name]['start']) * 1000, 2);
-
-            if (isset($this->timers[$name]['time'])) {
-                $diff += $this->timers[$name]['time'];
             }
-            return $diff;
-        }
-        return $this->timers[$name]['time'];
-    }
-    private function iflychat_timer_start($name) {
-        //global $this->timers;
 
-        $this->timers[$name]['start'] = microtime(TRUE);
-        $this->timers[$name]['count'] = isset($this->timers[$name]['count']) ? ++$this->timers[$name]['count'] : 1;
+
+        }
+
+
+
+
     }
 
-    private function iflychat_extended_http_request($url, array $options = array()) {
-        $result = new stdClass();
-        // Parse the URL and make sure we can handle the schema.
-        $uri = @parse_url($url);
-        if ($uri == FALSE) {
-            $result->error = 'unable to parse URL';
-            $result->code = -1001;
-            return $result;
-        }
 
-        if (!isset($uri['scheme'])) {
-            $result->error = 'missing schema';
-            $result->code = -1002;
-            return $result;
-        }
 
-        $this->iflychat_timer_start(__FUNCTION__);
 
-        // Merge the default options.
-        $options += array(
-            'headers' => array(),
-            'method' => 'POST',
-            'data' => NULL,
-            'max_redirects' => 3,
-            'timeout' => 30.0,
-            'context' => NULL,
-        );
-
-        // Merge the default headers.
-        $options['headers'] += array(
-            'User-Agent' => 'Drupal (+http://drupal.org/)',
-        );
-
-        // stream_socket_client() requires timeout to be a float.
-        $options['timeout'] = (float) $options['timeout'];
-
-        // Use a proxy if one is defined and the host is not on the excluded list.
-        $proxy_server = '';
-        if ($proxy_server && _drupal_http_use_proxy($uri['host'])) {
-            // Set the scheme so we open a socket to the proxy server.
-            $uri['scheme'] = 'proxy';
-            // Set the path to be the full URL.
-            $uri['path'] = $url;
-            // Since the URL is passed as the path, we won't use the parsed query.
-            unset($uri['query']);
-
-            // Add in username and password to Proxy-Authorization header if needed.
-            if ($proxy_username = '') {
-                $proxy_password = '';
-                $options['headers']['Proxy-Authorization'] = 'Basic ' . base64_encode($proxy_username . (!empty($proxy_password) ? ":" . $proxy_password : ''));
-            }
-            // Some proxies reject requests with any User-Agent headers, while others
-            // require a specific one.
-            $proxy_user_agent = '';
-            // The default value matches neither condition.
-            if ($proxy_user_agent === NULL) {
-                unset($options['headers']['User-Agent']);
-            }
-            elseif ($proxy_user_agent) {
-                $options['headers']['User-Agent'] = $proxy_user_agent;
-            }
-        }
-
-        switch ($uri['scheme']) {
-            case 'proxy':
-                // Make the socket connection to a proxy server.
-                $socket = 'tcp://' . $proxy_server . ':' . 8080;
-                // The Host header still needs to match the real request.
-                $options['headers']['Host'] = $uri['host'];
-                $options['headers']['Host'] .= isset($uri['port']) && $uri['port'] != 80 ? ':' . $uri['port'] : '';
-                break;
-
-            case 'http':
-            case 'feed':
-                $port = isset($uri['port']) ? $uri['port'] : 80;
-                $socket = 'tcp://' . $uri['host'] . ':' . $port;
-                // RFC 2616: "non-standard ports MUST, default ports MAY be included".
-                // We don't add the standard port to prevent from breaking rewrite rules
-                // checking the host that do not take into account the port number.
-                $options['headers']['Host'] = $uri['host'] . ($port != 80 ? ':' . $port : '');
-                break;
-
-            case 'https':
-                // Note: Only works when PHP is compiled with OpenSSL support.
-                $port = isset($uri['port']) ? $uri['port'] : 443;
-                $socket = 'ssl://' . $uri['host'] . ':' . $port;
-                $options['headers']['Host'] = $uri['host'] . ($port != 443 ? ':' . $port : '');
-                break;
-
-            default:
-                $result->error = 'invalid schema ' . $uri['scheme'];
-                $result->code = -1003;
-                return $result;
-        }
-
-        if (empty($options['context'])) {
-            $fp = @stream_socket_client($socket, $errno, $errstr, $options['timeout']);
-        }
-        else {
-            // Create a stream with context. Allows verification of a SSL certificate.
-            $fp = @stream_socket_client($socket, $errno, $errstr, $options['timeout'], STREAM_CLIENT_CONNECT, $options['context']);
-        }
-
-        // Make sure the socket opened properly.
-        if (!$fp) {
-            // When a network error occurs, we use a negative number so it does not
-            // clash with the HTTP status codes.
-            $result->code = -$errno;
-            $result->error = trim($errstr) ? trim($errstr) : 'Error opening socket @socket';
-
-            // Mark that this request failed. This will trigger a check of the web
-            // server's ability to make outgoing HTTP requests the next time that
-            // requirements checking is performed.
-            // See system_requirements().
-            //variable_set('drupal_http_request_fails', TRUE);
-
-            return $result;
-        }
-
-        // Construct the path to act on.
-        $path = isset($uri['path']) ? $uri['path'] : '/';
-        if (isset($uri['query'])) {
-            $path .= '?' . $uri['query'];
-        }
-
-        // Only add Content-Length if we actually have any content or if it is a POST
-        // or PUT request. Some non-standard servers get confused by Content-Length in
-        // at least HEAD/GET requests, and Squid always requires Content-Length in
-        // POST/PUT requests.
-        $content_length = strlen($options['data']);
-        if ($content_length > 0 || $options['method'] == 'POST' || $options['method'] == 'PUT') {
-            $options['headers']['Content-Length'] = $content_length;
-        }
-
-        // If the server URL has a user then attempt to use basic authentication.
-        if (isset($uri['user'])) {
-            $options['headers']['Authorization'] = 'Basic ' . base64_encode($uri['user'] . (isset($uri['pass']) ? ':' . $uri['pass'] : ''));
-        }
-
-        // If the database prefix is being used by SimpleTest to run the tests in a copied
-        // database then set the user-agent header to the database prefix so that any
-        // calls to other Drupal pages will run the SimpleTest prefixed database. The
-        // user-agent is used to ensure that multiple testing sessions running at the
-        // same time won't interfere with each other as they would if the database
-        // prefix were stored statically in a file or database variable.
-        $test_info = &$GLOBALS['drupal_test_info'];
-        if (!empty($test_info['test_run_id'])) {
-            $options['headers']['User-Agent'] = drupal_generate_test_ua($test_info['test_run_id']);
-        }
-
-        $request = $options['method'] . ' ' . $path . " HTTP/1.0\r\n";
-        foreach ($options['headers'] as $name => $value) {
-            $request .= $name . ': ' . trim($value) . "\r\n";
-        }
-        $request .= "\r\n" . $options['data'];
-        $result->request = $request;
-        // Calculate how much time is left of the original timeout value.
-        $timeout = $options['timeout'] - $this->iflychat_timer_read(__FUNCTION__) / 1000;
-        if ($timeout > 0) {
-            stream_set_timeout($fp, floor($timeout), floor(1000000 * fmod($timeout, 1)));
-            fwrite($fp, $request);
-        }
-
-        // Fetch response. Due to PHP bugs like http://bugs.php.net/bug.php?id=43782
-        // and http://bugs.php.net/bug.php?id=46049 we can't rely on feof(), but
-        // instead must invoke stream_get_meta_data() each iteration.
-        $info = stream_get_meta_data($fp);
-        $alive = !$info['eof'] && !$info['timed_out'];
-        $response = '';
-
-        while ($alive) {
-            // Calculate how much time is left of the original timeout value.
-            $timeout = $options['timeout'] - $this->iflychat_timer_read(__FUNCTION__) / 1000;
-            if ($timeout <= 0) {
-                $info['timed_out'] = TRUE;
-                break;
-            }
-            stream_set_timeout($fp, floor($timeout), floor(1000000 * fmod($timeout, 1)));
-            $chunk = fread($fp, 1024);
-            $response .= $chunk;
-            $info = stream_get_meta_data($fp);
-            $alive = !$info['eof'] && !$info['timed_out'] && $chunk;
-        }
-        fclose($fp);
-
-        if ($info['timed_out']) {
-            $result->code = HTTP_REQUEST_TIMEOUT;
-            $result->error = 'request timed out';
-            return $result;
-        }
-        // Parse response headers from the response body.
-        // Be tolerant of malformed HTTP responses that separate header and body with
-        // \n\n or \r\r instead of \r\n\r\n.
-        list($response, $result->data) = preg_split("/\r\n\r\n|\n\n|\r\r/", $response, 2);
-        $response = preg_split("/\r\n|\n|\r/", $response);
-
-        // Parse the response status line.
-        list($protocol, $code, $status_message) = explode(' ', trim(array_shift($response)), 3);
-        $result->protocol = $protocol;
-        $result->status_message = $status_message;
-
-        $result->headers = array();
-
-        // Parse the response headers.
-        while ($line = trim(array_shift($response))) {
-            list($name, $value) = explode(':', $line, 2);
-            $name = strtolower($name);
-            if (isset($result->headers[$name]) && $name == 'set-cookie') {
-                // RFC 2109: the Set-Cookie response header comprises the token Set-
-                // Cookie:, followed by a comma-separated list of one or more cookies.
-                $result->headers[$name] .= ',' . trim($value);
-            }
-            else {
-                $result->headers[$name] = trim($value);
-            }
-        }
-
-        $responses = array(
-            100 => 'Continue',
-            101 => 'Switching Protocols',
-            200 => 'OK',
-            201 => 'Created',
-            202 => 'Accepted',
-            203 => 'Non-Authoritative Information',
-            204 => 'No Content',
-            205 => 'Reset Content',
-            206 => 'Partial Content',
-            300 => 'Multiple Choices',
-            301 => 'Moved Permanently',
-            302 => 'Found',
-            303 => 'See Other',
-            304 => 'Not Modified',
-            305 => 'Use Proxy',
-            307 => 'Temporary Redirect',
-            400 => 'Bad Request',
-            401 => 'Unauthorized',
-            402 => 'Payment Required',
-            403 => 'Forbidden',
-            404 => 'Not Found',
-            405 => 'Method Not Allowed',
-            406 => 'Not Acceptable',
-            407 => 'Proxy Authentication Required',
-            408 => 'Request Time-out',
-            409 => 'Conflict',
-            410 => 'Gone',
-            411 => 'Length Required',
-            412 => 'Precondition Failed',
-            413 => 'Request Entity Too Large',
-            414 => 'Request-URI Too Large',
-            415 => 'Unsupported Media Type',
-            416 => 'Requested range not satisfiable',
-            417 => 'Expectation Failed',
-            500 => 'Internal Server Error',
-            501 => 'Not Implemented',
-            502 => 'Bad Gateway',
-            503 => 'Service Unavailable',
-            504 => 'Gateway Time-out',
-            505 => 'HTTP Version not supported',
-        );
-        // RFC 2616 states that all unknown HTTP codes must be treated the same as the
-        // base code in their class.
-        if (!isset($responses[$code])) {
-            $code = floor($code / 100) * 100;
-        }
-        $result->code = $code;
-
-        switch ($code) {
-            case 200: // OK
-            case 304: // Not modified
-                break;
-            case 301: // Moved permanently
-            case 302: // Moved temporarily
-            case 307: // Moved temporarily
-                $location = $result->headers['location'];
-                $options['timeout'] -= $this->iflychat_timer_read(__FUNCTION__) / 1000;
-                if ($options['timeout'] <= 0) {
-                    $result->code = HTTP_REQUEST_TIMEOUT;
-                    $result->error = 'request timed out';
-                }
-                elseif ($options['max_redirects']) {
-                    // Redirect to the new location.
-                    $options['max_redirects']--;
-                    $result = $this->iflychat_extended_http_request($location, $options);
-                    $result->redirect_code = $code;
-                }
-                if (!isset($result->redirect_url)) {
-                    $result->redirect_url = $location;
-                }
-                break;
-            default:
-                $result->error = $status_message;
-        }
-
-        return $result;
-
-}
-    function defaultValue($field) {
-
-        $dVal = array (
-            'iflychat_ext_d_i' => '',
-            'iflychat_external_api_key' => 'NULL',
-            'iflychat_theme' => '1',
-            'iflychat_notification_sound' => '1',
-            'iflychat_anon_use_name' => '1',
-            'iflychat_show_admin_list' => '2',
-            'iflychat_anon_prefix' => 'Guest',
-            'iflychat_enable_smileys' => '1',
-            'iflychat_user_picture' => '1',
-            'iflychat_support_chat_init_label' => 'Chat with us',
-            'iflychat_support_chat_box_header' => 'Support',
-            'iflychat_support_chat_box_company_name' => 'Support Team',
-            'iflychat_support_chat_box_company_tagline' => 'Ask us anything...',
-            'iflychat_support_chat_auto_greet_enable' => '1',
-            'iflychat_support_chat_auto_greet_message' => 'Hi there! Welcome to our website. Let us know if you have any query!',
-            'iflychat_support_chat_auto_greet_time' => '',
-            'iflychat_support_chat_offline_message_label' => 'Message',
-            'iflychat_support_chat_offline_message_contact' => 'Contact Details',
-            'iflychat_support_chat_offline_message_send_button' => 'Send Message',
-            'iflychat_support_chat_offline_message_desc' => 'Hello there. We are currently offline. Please leave us a message. Thanks.',
-            'iflychat_support_chat_init_label_off' => 'Leave Message',
-            'iflychat_minimize_chat_user_list' => '2',
-            'iflychat_use_stop_word_list' => '1',
-            'iflychat_stop_links' => '1',
-            'iflychat_allow_anon_links' => '1',
-            'iflychat_allow_render_images' => '1',
-            'iflychat_enable_search_bar' => '1'
-        );
-
-        return $dVal["$field"];
-    }
-
-    function params($field) {
-
-        $config = OW::getConfig();
-        $configArr = $config->getValues('iflychat');
-        $params = json_decode($configArr['setting_vars'], TRUE);
-        if(empty($params["$field"])){
-
-            return $this->defaultValue($field);
-
-        }else{
-
-            return $params["$field"];
-
-        }
-
-    }
 }
 class IFLYCHAT_ConfigSaveForm extends Form {
 
@@ -552,7 +191,7 @@ class IFLYCHAT_ConfigSaveForm extends Form {
         $selectField = new Selectbox("iflychat_show_admin_list");
         $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_SHOW_ADMIN_LIST"));
         $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_SHOW_ADMIN_LIST_DESC"));
-        $selectField->setValue('1');
+        $selectField->setValue('2');
         $selectField->setOptions(array(
             "2" => "Community Chat",
             "1" => "Support Chat"
@@ -571,29 +210,52 @@ class IFLYCHAT_ConfigSaveForm extends Form {
         ));
         $this->addElement($selectField);
 
-        $field = new CheckboxField("iflychat_notification_sound");
-        $field->setLabel($language->text("iflychat", "MOD_IFLYCHAT_NOTIFICATION_SOUND"));
-        $field->setDescription($language->text("iflychat", "MOD_IFLYCHAT_NOTIFICATION_SOUND_DESC"));
-        $field->setValue('1');
-        $this->addElement($field);
 
-        $field = new CheckboxField("iflychat_user_picture");
-        $field->setLabel($language->text("iflychat", "MOD_IFLYCHAT_USER_PICTURE"));
-        $field->setDescription($language->text("iflychat", "MOD_IFLYCHAT_USER_PICTURE_DESC"));
-        $field->setValue('1');
-        $this->addElement($field);
+        $selectField = new Selectbox("iflychat_notification_sound");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_NOTIFICATION_SOUND"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_NOTIFICATION_SOUND_DESC"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
 
-        $field = new CheckboxField("iflychat_enable_smileys");
-        $field->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_SMILEYS"));
-        $field->setDescription($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_SMILEYS_DESC"));
-        $field->setValue('1');
-        $this->addElement($field);
 
-        $field = new CheckboxField("iflychat_log_messages");
-        $field->setLabel($language->text("iflychat", "MOD_IFLYCHAT_LOG_MESSAGES"));
-        $field->setDescription($language->text("iflychat", "MOD_IFLYCHAT_LOG_MESSAGES_DESC"));
-        $field->setValue('1');
-        $this->addElement($field);
+
+        $selectField = new Selectbox("iflychat_user_picture");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_USER_PICTURE"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_USER_PICTURE_DESC"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
+
+
+
+        $selectField = new Selectbox("iflychat_enable_smileys");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_SMILEYS"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_SMILEYS_DESC"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
+
+
+
+        $selectField = new Selectbox("iflychat_log_messages");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_LOG_MESSAGES"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_LOG_MESSAGES_DESC"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
 
         $textField = new TextField("iflychat_anon_prefix");
         $textField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ANON_PREFIX"));
@@ -612,17 +274,29 @@ class IFLYCHAT_ConfigSaveForm extends Form {
         ));
         $this->addElement($selectField);
 
-        $field = new CheckboxField("iflychat_anon_change_name");
-        $field->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ANON_CHANGE_NAME"));
-        $field->setDescription($language->text("iflychat", "MOD_IFLYCHAT_ANON_CHANGE_NAME_DESC"));
-        $field->setValue('1');
-        $this->addElement($field);
 
-        $field = new CheckboxField("iflychat_load_chat_async");
-        $field->setLabel($language->text("iflychat", "MOD_IFLYCHAT_LOAD_CHAT_ASYNC"));
-        $field->setDescription($language->text("iflychat", "MOD_IFLYCHAT_LOAD_CHAT_ASYNC_DESC"));
-        $field->setValue('1');
-        $this->addElement($field);
+
+        $selectField = new Selectbox("iflychat_anon_change_name");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ANON_CHANGE_NAME"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_ANON_CHANGE_NAME_DESC"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
+
+
+
+        $selectField = new Selectbox("iflychat_load_chat_async");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_LOAD_CHAT_ASYNC"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_LOAD_CHAT_ASYNC_DESC"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
 
         $hiddenField = new HiddenField("iflychat_ext_d_i");
         $hiddenField->setValue("");
@@ -654,16 +328,29 @@ class IFLYCHAT_ConfigSaveForm extends Form {
         $textField->setValue('Ask us anything...');
         $this->addElement($textField);
 
-        $field = new CheckboxField("iflychat_support_chat_auto_greet_enable");
-        $field->setLabel($language->text("iflychat", "MOD_IFLYCHAT_SUPPORT_CHAT_AUTO_GREET_ENABLE"));
-        $field->setValue('1');
-        $this->addElement($field);
+
+        $selectField = new Selectbox("iflychat_support_chat_auto_greet_enable");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_SUPPORT_CHAT_AUTO_GREET_ENABLE"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
 
         $textareaField = new Textarea("iflychat_support_chat_auto_greet_message");
         $textareaField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_SUPPORT_CHAT_AUTO_GREET_MESSAGE"));
         $textareaField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_SUPPORT_CHAT_AUTO_GREET_MESSAGE_DESC"));
         $textareaField->setValue('Hi there! Welcome to our website. Let us know if you have any query!');
         $this->addElement($textareaField);
+
+        $selectField = new Selectbox("iflychat_support_chat_auto_greet_time");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_SUPPORT_CHAT_AUTO_GREET_TIME"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_SUPPORT_CHAT_AUTO_GREET_TIME_DESC"));
+        $selectField->setValue('1');
+        $seconds = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7=>7, 8 => 8, 9 => 9, 10 => 10, 11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15, 16 => 16, 17 => 17, 18 => 18, 19 => 19, 20 => 20, 30 => 30, 40 => 40, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100, 110 => 110, 120 => 120, 150 => 150, 180 => 180, 240 => 240, 300 => 300);
+        $selectField->setOptions($seconds);
+        $this->addElement($selectField);
 
         $textField = new TextField("iflychat_support_chat_init_label_off");
         $textField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_SUPPORT_CHAT_INIT_LABEL_OFF"));
@@ -702,10 +389,15 @@ class IFLYCHAT_ConfigSaveForm extends Form {
 
 //Chat moderation
 
-        $field = new CheckboxField("iflychat_enable_chatroom");
-        $field->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_CHATROOM"));
-        $field->setValue('1');
-        $this->addElement($field);
+
+        $selectField = new Selectbox("iflychat_enable_chatroom");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_CHATROOM"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
 
         $textareaField = new Textarea("iflychat_stop_word_list");
         $textareaField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_STOP_WORD_LIST"));
@@ -892,6 +584,7 @@ class IFLYCHAT_ConfigSaveForm extends Form {
         $this->addElement($submit);
 
     }
+
     public function process( $data )
     {
         $config = OW::getConfig();
