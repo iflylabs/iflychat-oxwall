@@ -19,7 +19,7 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
         $obj = new iflychatHelper;
 
 
-$variable_get = $obj->params('iflychat_ext_d_i');
+        $variable_get = $obj->params('iflychat_ext_d_i');
 
 
         define('IFLYCHAT_EXTERNAL_HOST', 'http://api'.$variable_get.'.iflychat.com');

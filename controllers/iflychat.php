@@ -46,7 +46,7 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
             $iflychat_theme = 'dark';
         }
 
-//data array
+
         $data = array(
             'uname' => ($uid)?$uname:$obj->iflychat_get_current_guest_name(),
             'uid' => ($uid)?(string)OW::getUser()->getId():'0-'.$obj->iflychat_get_current_guest_id(),
