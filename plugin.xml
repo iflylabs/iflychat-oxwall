@@ -3,12 +3,12 @@
 <plugin>
 	<name>iFlyChat</name>
 	<key>iflychat</key>
-	<description>Allows users to communicate via instant chat messaging. Provides multiple AJAX implementations.</description>
-    <author>IflyChat team</author>
+	<description>iFlyChat allows visitors of your Oxwall site to chat with each other privately (one-to-one chat) or together in chat rooms.</description>
+    <author>iFlyChat team</author>
     <authorEmail>support@iflylabs.com</authorEmail>
-	<authorUrl>http://www.iflylabs.com</authorUrl>
-	<developerKey>807410803d776a1fffcdcd843e36fcef</developerKey>
-    <build>7000</build>
+	<authorUrl>https://iflychat.com</authorUrl>
+	<developerKey>8c9a3ad5afd04feaf91851fdd2d30086</developerKey>
+    <build>1</build>
     <copyright>(C) 2009 Oxwall Foundation. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <licenseUrl>http://www.opensource.org/licenses/bsd-license.php</licenseUrl>
