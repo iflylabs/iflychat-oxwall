@@ -372,7 +372,7 @@ class IflychatHelper {
             setrawcookie('iflychat_guest_session', rawurlencode($_SESSION['iflychat_guest_session']), time()+60*60*24*365);
             //}
         }
-        else if(isset($_COOKIE) && isset($_COOKIE['iflychat_guest_id']) && isset($_COOKIE['iflychat_guest_session']) && ($_COOKIE['iflychat_guest_session']==iflychat_compute_guest_session($_COOKIE['iflychat_guest_id']))) {
+        else if(isset($_COOKIE) && isset($_COOKIE['iflychat_guest_id']) && isset($_COOKIE['iflychat_guest_session']) && ($_COOKIE['iflychat_guest_session']==$this->iflychat_compute_guest_session($_COOKIE['iflychat_guest_id']))) {
             $_SESSION['iflychat_guest_id'] = $this->check_plain($_COOKIE['iflychat_guest_id']);
             $_SESSION['iflychat_guest_session'] = $this->check_plain($_COOKIE['iflychat_guest_session']);
         }
@@ -403,12 +403,23 @@ class IflychatHelper {
         $url = '';
 
         if($this->params('iflychat_theme') == 1) {
+
             $iflychat_theme = 'light';
         }
         else {
             $iflychat_theme = 'dark';
+
+
         }
+        $id = OW::getUser()->getId();
+        $pUrl = BOL_AvatarService::getInstance()->getAvatarUrl($id);
+        if(empty($pUrl)) {
         $url = OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . 'themes/' . $iflychat_theme . '/images/default_avatar.png';
+        }
+            else  {
+            $url = BOL_AvatarService::getInstance()->getAvatarUrl($id);
+        }
+
         $pos = strpos($url, ':');
         if($pos !== false) {
             $url = substr($url, $pos+1);
@@ -420,6 +431,10 @@ class IflychatHelper {
 
         $id = OW::getUser()->getId();
         $upl = BOL_UserService::getInstance()->getUserUrl($id);
+        $pos = strpos($upl, ':');
+        if($pos !== false) {
+            $upl = substr($upl, $pos+1);
+        }
         return $upl;
     }
     private function defaultValue($field) {

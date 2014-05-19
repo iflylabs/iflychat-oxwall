@@ -22,8 +22,8 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
         header('Content-type: application/json');
         $settingJson  = OW::getConfig()->getValue('iflychat', 'setting_vars');
         $settingArray = (array)json_decode($settingJson);
-$id = OW::getUser()->getId();
-       print_r(BOL_UserService::getInstance()->);exit;
+//$id = OW::getUser()->getId();
+     //  print_r(BOL_AvatarService::getInstance()->getAvatarUrl($id));exit;
         define('IFLYCHAT_EXTERNAL_HOST', 'http://api'.$variable_get.'.iflychat.com');
         define('IFLYCHAT_EXTERNAL_PORT', '80');
         define('IFLYCHAT_EXTERNAL_A_HOST', 'https://api'.$variable_get.'.iflychat.com');
