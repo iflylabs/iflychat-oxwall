@@ -126,11 +126,11 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
         $iflychat_settings['searchBar'] = ($obj->params('iflychat_enable_search_bar')=='1')?'1':'2';
         $iflychat_settings['text_search_bar'] = $language->text('iflychat','MOD_TYPE_HERE_TO_SEARCH');
 
-
+if($obj->iflychat_path_check()){
         OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('iflychat')->getStaticJsUrl() . 'iflychat.js');
         OW::getDocument()->addScriptDeclarationBeforeIncludes("Drupal={};Drupal.settings={};Drupal.settings.drupalchat=" . json_encode($iflychat_settings).";\n ");
         OW::getDocument()->addScriptDeclarationBeforeIncludes('window.my_var_handle ="' . OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . '"');
         return parent::render();
-    }
+} }
 
 }

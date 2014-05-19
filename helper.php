@@ -417,7 +417,9 @@ class IflychatHelper {
     }
 
     public function iflychat_get_user_profile_url() {
-        $upl = 'javascript:void()';
+
+        $id = OW::getUser()->getId();
+        $upl = BOL_UserService::getInstance()->getUserUrl($id);
         return $upl;
     }
     private function defaultValue($field) {
@@ -432,6 +434,8 @@ class IflychatHelper {
             'iflychat_anon_prefix' => 'Guest',
             'iflychat_enable_smileys' => '1',
             'iflychat_user_picture' => '1',
+            'iflychat_path_pages' => '',
+            'iflychat_path_visibility' => '1',
             'iflychat_support_chat_init_label' => 'Chat with us',
             'iflychat_support_chat_box_header' => 'Support',
             'iflychat_support_chat_box_company_name' => 'Support Team',
@@ -477,6 +481,39 @@ class IflychatHelper {
         if($var[0] === 'https') {
             return true;
         }
+    }
+
+    function iflychat_path_check() {
+        $page_match = FALSE;
+        if (trim($this->params('iflychat_path_pages')) != '') {
+            if(function_exists('mb_strtolower')) {
+                $pages = mb_strtolower($this->params('iflychat_path_pages'));
+                $path = mb_strtolower(OW::getRouter()->getUri());
+            }
+            else {
+                $pages = strtolower($this->params('iflychat_path_pages'));
+                $path = strtolower(OW::getRouter()->getUri());
+            }
+            $page_match = $this->iflychat_match_path($path, $pages);
+            $page_match = ($this->params('iflychat_path_visibility') == '1')?(!$page_match):$page_match;
+        }
+        else if($this->params('iflychat_path_visibility') == '1'){
+            $page_match = TRUE;
+        }
+        return $page_match;
+    }
+    function iflychat_match_path($path, $patterns) {
+        $to_replace = array(
+            '/(\r\n?|\n)/',
+            '/\\\\\*/',
+        );
+        $replacements = array(
+            '|',
+            '.*',
+        );
+        $patterns_quoted = preg_quote($patterns, '/');
+        $regexps[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
+        return (bool) preg_match($regexps[$patterns], $path);
     }
 
 }

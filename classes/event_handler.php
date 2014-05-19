@@ -36,6 +36,7 @@ class IFLYCHAT_CLASS_EventHandler
     public function genericInit()
     {
         OW::getEventManager()->bind(OW_EventManager::ON_FINALIZE, array($this, 'onPluginInit'));
+        OW::getEventManager()->bind('admin.add_auth_labels', array($this, 'onCollectAuthLabels'));
 
 
     }
@@ -57,7 +58,20 @@ class IFLYCHAT_CLASS_EventHandler
 
         return 'hi';
     }
-
+    public function onCollectAuthLabels( BASE_CLASS_EventCollector $event )
+    {
+        $language = OW::getLanguage();
+        $event->add(
+            array(
+                'iflychat' => array(
+                    'label' => $language->text('iflychat', 'auth_group_label'),
+                    'actions' => array(
+                        'add_chat' => $language->text('iflychat', 'auth_action_label_chat')
+                    )
+                )
+            )
+        );
+    }
 
 
 }

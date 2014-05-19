@@ -3,8 +3,8 @@
  * @package iFlyChat
  * @version 1.0.0
  * @copyright Copyright (C) 2014 iFlyChat. All rights reserved.
- * @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
- * @author iFlyChat Team
+ * @license GNUiFlyChat/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ * @author  Team
  * @link https://iflychat.com
  */
 
@@ -18,11 +18,12 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
       //  $variable_get = '3';
 
         $variable_get = $obj->params('iflychat_ext_d_i');
-
+//print_r($_SERVER['REQUEST_URI']);exit;
         header('Content-type: application/json');
         $settingJson  = OW::getConfig()->getValue('iflychat', 'setting_vars');
         $settingArray = (array)json_decode($settingJson);
-
+$id = OW::getUser()->getId();
+       print_r(BOL_UserService::getInstance()->);exit;
         define('IFLYCHAT_EXTERNAL_HOST', 'http://api'.$variable_get.'.iflychat.com');
         define('IFLYCHAT_EXTERNAL_PORT', '80');
         define('IFLYCHAT_EXTERNAL_A_HOST', 'https://api'.$variable_get.'.iflychat.com');
@@ -30,7 +31,7 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
         $uid = OW::getUser()->getId();
         $uname = ($uid)?BOL_UserService::getInstance()->findUserById($uid)->username:'';
 
-
+       // $user = OW_User::getInstance()->
         if(OW_User::getInstance()->isAdmin()) {
             $role = 'admin';
         }else {
@@ -67,7 +68,7 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
             'timeout' => 15,
             'headers' => array('Content-Type' => 'application/json'),
         );
-
+if(OW_User::getInstance()->isAuthorized('iflychat', 'add_chat')){
 
         $uri = IFLYCHAT_EXTERNAL_A_HOST . ':' . IFLYCHAT_EXTERNAL_A_PORT .  '/p/';
 try {
@@ -120,7 +121,12 @@ if(isset($jsonData->_i) && ($jsonData->_i!=$variable_get)) {
     );
 
     exit(json_encode($var));
-        }
+            }
+
+
+        } else{
+    exit('Access denied');
+}
 
     }
 

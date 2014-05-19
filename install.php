@@ -13,6 +13,12 @@ OW::getConfig()->addConfig('iflychat', 'setting_vars', '{}');
 
 OW::getPluginManager()->addPluginSettingsRouteName('iflychat', 'iflychat_admin');
 OW::getLanguage()->importPluginLangs(OW::getPluginManager()->getPlugin('iflychat')->getRootDir() . 'langs.zip', 'iflychat');
+$authorization = OW::getAuthorization();
+$groupName = 'iflychat';
+$authorization->addGroup($groupName);
+$authorization->addAction($groupName, 'add_chat', true);
+//$authorization->addAction($groupName, 'view_event', true);
+//$authorization->addAction($groupName, 'add_comment');
 /*$config = OW::getConfig();
 $config->addConfig('iflychat', 'iflychat_external_api_key', '');
 $config->addConfig('iflychat', 'iflychat_show_admin_list', '1');
