@@ -18,11 +18,11 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
       //  $variable_get = '3';
 
         $variable_get = $obj->params('iflychat_ext_d_i');
-//print_r($_SERVER['REQUEST_URI']);exit;
+
         header('Content-type: application/json');
         $settingJson  = OW::getConfig()->getValue('iflychat', 'setting_vars');
         $settingArray = (array)json_decode($settingJson);
-//$id = OW::getUser()->getId();
+     //$id = OW::getUser()->getId();
      //  print_r(BOL_AvatarService::getInstance()->getAvatarUrl($id));exit;
         define('IFLYCHAT_EXTERNAL_HOST', 'http://api'.$variable_get.'.iflychat.com');
         define('IFLYCHAT_EXTERNAL_PORT', '80');
@@ -31,8 +31,8 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
         $uid = OW::getUser()->getId();
         $uname = ($uid)?BOL_UserService::getInstance()->findUserById($uid)->username:'';
 
-       // $user = OW_User::getInstance()->
-        if(OW_User::getInstance()->isAdmin()) {
+
+        if(OW_User::getInstance()->isAdmin() && OW_User::getInstance()->isAuthorized('iflychat', 'mod') ) {
             $role = 'admin';
         }else {
             $role = 'normal';
@@ -68,13 +68,14 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
             'timeout' => 15,
             'headers' => array('Content-Type' => 'application/json'),
         );
-if(OW_User::getInstance()->isAuthorized('iflychat', 'add_chat')){
+
+     if(OW_User::getInstance()->isAuthorized('iflychat', 'add_chat')){
 
         $uri = IFLYCHAT_EXTERNAL_A_HOST . ':' . IFLYCHAT_EXTERNAL_A_PORT .  '/p/';
-try {
+    try {
 
     $response = $obj->iflychat_extended_http_request($uri, $options);
-if($response->code != 200) {
+    if($response->code != 200) {
 
     $var = array (
         'name' => ($uid)?$uname:$obj->iflychat_get_current_guest_name(),
@@ -87,7 +88,7 @@ if($response->code != 200) {
 
     $jsonData = json_decode($response->data);
 
-if(isset($jsonData->_i) && ($jsonData->_i!=$variable_get)) {
+    if(isset($jsonData->_i) && ($jsonData->_i!=$variable_get)) {
 
     $config = OW::getConfig();
     $configArr = $config->getValues('iflychat');
@@ -100,7 +101,7 @@ if(isset($jsonData->_i) && ($jsonData->_i!=$variable_get)) {
     $config->saveConfig('iflychat', 'setting_vars',json_encode(array_merge($data, $data2)));
 
 
-}
+    }
         $json = json_decode($response->data, TRUE);
 
 
@@ -110,9 +111,9 @@ if(isset($jsonData->_i) && ($jsonData->_i!=$variable_get)) {
         $json['upl'] = $obj->iflychat_get_user_profile_url();
 
          exit(json_encode($json));
-}
+    }
     catch(Exception $e)
-{
+    {
 
 
     $var = array (
@@ -126,7 +127,7 @@ if(isset($jsonData->_i) && ($jsonData->_i!=$variable_get)) {
 
         } else{
     exit('Access denied');
-}
+    }
 
     }
 

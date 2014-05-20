@@ -12,8 +12,6 @@
 require_once(OW_DIR_PLUGIN.'iflychat'.DS.'helper.php');
 class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
 
-    private $timers;
-
 
 
     public function index()
@@ -139,9 +137,7 @@ $default = array(
     'iflychat_chat_list_header' => 'Chat',
     'iflychat_minimize_chat_user_list' => '2',
     'iflychat_enable_search_bar' => '1',
-    'iflychat_rel' => '1',
-    'iflychat_ur_name' => '',
-    'iflychat_only_loggedin' => '1',
+
 
 );
 
@@ -201,7 +197,7 @@ class IFLYCHAT_ConfigSaveForm extends Form {
 
         $selectField = new Selectbox("iflychat_theme");
         $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_THEME"));
-        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_SHOW_ADMIN_LIST_DESC"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_THEME_DESC"));
         $selectField->setInvitation('Select any');
         $selectField->setValue('1');
         $selectField->setOptions(array(
@@ -557,26 +553,6 @@ class IFLYCHAT_ConfigSaveForm extends Form {
         ));
         $this->addElement($selectField);
 
-        $field = new CheckboxField("iflychat_rel");
-        $field->setLabel($language->text("iflychat", "MOD_IFLYCHAT_REL"));
-        $field->setDescription($language->text("iflychat", "MOD_IFLYCHAT_REL_DESC"));
-        $field->setValue('1');
-        $this->addElement($field);
-
-        $textField = new TextField("iflychat_ur_name");
-        $textField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_UR_NAME"));
-        $textField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_UR_NAME_DESC"));
-
-        $this->addElement($textField);
-
-        $selectField = new Selectbox("iflychat_only_loggedin");
-        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ONLY_LOGGEDIN"));
-        $selectField->setValue('1');
-        $selectField->setOptions(array(
-            "1" => "Yes",
-            "2" => "No"
-        ));
-        $this->addElement($selectField);
 
 
         $submit = new Submit('submit');

@@ -10,19 +10,11 @@
  */
 class IFLYCHAT_CLASS_EventHandler
 {
-    /**
-     * Singleton instance.
-     *
-     * @var AJAXIM_CLASS_EventHandler
-     */
+
 
     private static $classInstance;
 
-    /**
-     * Returns an instance of class (singleton pattern implementation).
-     *
-     * @return AJAXIM_CLASS_EventHandler
-     */
+
     public static function getInstance()
     {
         if ( self::$classInstance === null )
@@ -54,10 +46,7 @@ class IFLYCHAT_CLASS_EventHandler
         OW::getDocument()->appendBody($im_toolbar->render());
     }
 
-    public function hi(){
 
-        return 'hi';
-    }
     public function onCollectAuthLabels( BASE_CLASS_EventCollector $event )
     {
         $language = OW::getLanguage();
@@ -66,11 +55,13 @@ class IFLYCHAT_CLASS_EventHandler
                 'iflychat' => array(
                     'label' => $language->text('iflychat', 'auth_group_label'),
                     'actions' => array(
-                        'add_chat' => $language->text('iflychat', 'auth_action_label_chat')
+                        'add_chat' => $language->text('iflychat', 'auth_action_label_chat'),
+                        'mod' => $language->text('iflychat', 'auth_action_label_admin')
                     )
                 )
             )
         );
+
     }
 
 
