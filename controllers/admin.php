@@ -565,54 +565,7 @@ class IFLYCHAT_ConfigSaveForm extends Form {
     {
         $config = OW::getConfig();
         $config->saveConfig('iflychat', 'setting_vars', $data);
-      /*  $config->saveConfig('iflychat', 'iflychat_external_api_key', $data['iflychat_external_api_key']);
-        $config->saveConfig('iflychat', 'iflychat_show_admin_list', $data['iflychat_show_admin_list']);
-        $config->saveConfig('iflychat', 'iflychat_theme', $data['iflychat_theme']);
-        $config->saveConfig('iflychat', 'iflychat_notification_sound', $data['iflychat_notification_sound']);
-        $config->saveConfig('iflychat', 'iflychat_user_picture', $data['iflychat_user_picture']);
-        $config->saveConfig('iflychat', 'iflychat_enable_smileys', $data['iflychat_enable_smileys']);
-        $config->saveConfig('iflychat', 'iflychat_log_messages', $data['iflychat_log_messages']);
-        $config->saveConfig('iflychat', 'iflychat_anon_prefix', $data['iflychat_anon_prefix']);
-        $config->saveConfig('iflychat', 'iflychat_anon_use_name', $data['iflychat_anon_use_name']);
-        $config->saveConfig('iflychat', 'iflychat_anon_change_name', $data['iflychat_anon_change_name']);
-        $config->saveConfig('iflychat', 'iflychat_load_chat_async', $data['iflychat_load_chat_async']);
-        $config->saveConfig('iflychat', 'iflychat_ext_d_i', $data['iflychat_ext_d_i']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_init_label', $data['iflychat_support_chat_init_label']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_box_header', $data['iflychat_support_chat_box_header']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_box_company_name', $data['iflychat_support_chat_box_company_name']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_box_company_tagline', $data['iflychat_support_chat_box_company_tagline']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_auto_greet_enable', $data['iflychat_support_chat_auto_greet_enable']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_auto_greet_message', $data['iflychat_support_chat_auto_greet_message']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_auto_greet_time', $data['iflychat_support_chat_auto_greet_time']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_init_label_off', $data['iflychat_support_chat_init_label_off']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_offline_message_desc', $data['iflychat_support_chat_offline_message_desc']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_offline_message_label', $data['iflychat_support_chat_offline_message_label']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_offline_message_contact', $data['iflychat_support_chat_offline_message_contact']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_offline_message_send_button', $data['iflychat_support_chat_offline_message_send_button']);
-        $config->saveConfig('iflychat', 'iflychat_support_chat_offline_message_email', $data['iflychat_support_chat_offline_message_email']);
-        $config->saveConfig('iflychat', 'iflychat_enable_chatroom', $data['iflychat_enable_chatroom']);
-        $config->saveConfig('iflychat', 'iflychat_stop_word_list', $data['iflychat_stop_word_list']);
-        $config->saveConfig('iflychat', 'iflychat_use_stop_word_list', $data['iflychat_use_stop_word_list']);
-        $config->saveConfig('iflychat', 'iflychat_stop_links', $data['iflychat_stop_links']);
-        $config->saveConfig('iflychat', 'iflychat_allow_anon_links', $data['iflychat_allow_anon_links']);
-        $config->saveConfig('iflychat', 'iflychat_allow_render_images', $data['iflychat_allow_render_images']);
-        $config->saveConfig('iflychat', 'iflychat_allow_single_message_delete', $data['iflychat_allow_single_message_delete']);
-        $config->saveConfig('iflychat', 'iflychat_allow_clear_room_history', $data['iflychat_allow_clear_room_history']);
-        $config->saveConfig('iflychat', 'iflychat_allow_user_font_color', $data['iflychat_allow_user_font_color']);
-        $config->saveConfig('iflychat', 'iflychat_path_visibility', $data['iflychat_path_visibility']);
-        $config->saveConfig('iflychat', 'iflychat_path_pages', $data['iflychat_path_pages']);
-        $config->saveConfig('iflychat', 'iflychat_chat_topbar_color', $data['iflychat_chat_topbar_color']);
-        $config->saveConfig('iflychat', 'iflychat_chat_topbar_text_color', $data['iflychat_chat_topbar_text_color']);
-        $config->saveConfig('iflychat', 'iflychat_font_color', $data['iflychat_font_color']);
-        $config->saveConfig('iflychat', 'iflychat_public_chatroom_header', $data['iflychat_public_chatroom_header']);
-        $config->saveConfig('iflychat', 'iflychat_chat_list_header', $data['iflychat_chat_list_header']);
-        $config->saveConfig('iflychat', 'iflychat_minimize_chat_user_list', $data['iflychat_minimize_chat_user_list']);
-        $config->saveConfig('iflychat', 'iflychat_enable_search_bar', $data['iflychat_enable_search_bar']);
-        $config->saveConfig('iflychat', 'iflychat_rel', $data['iflychat_rel']);
-        $config->saveConfig('iflychat', 'iflychat_ur_name', $data['iflychat_ur_name']);
-        $config->saveConfig('iflychat', 'iflychat_only_loggedin', $data['iflychat_only_loggedin']);
 
-*/
         return true;
     }
 
