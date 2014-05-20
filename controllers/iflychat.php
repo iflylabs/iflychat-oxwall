@@ -57,9 +57,21 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
             'role' => $role,
             'whichTheme' => 'blue',
             'enableStatus' => TRUE,
-            'validState' => array('available','offline','busy','idle')
+            'validState' => array('available','offline','busy','idle'),
+            'rel' => '0'
         );
 
+
+
+        //Get friend's id
+        if($obj->params('iflychat_enable_friends')==2 && is_array(FRIENDS_BOL_Service::getInstance()->findAllActiveFriendships())){
+            $data['rel'] = '1';
+            $final_list = array();
+            $final_list['1']['name'] = 'friend';
+            $final_list['1']['plural'] = 'friends';
+            $final_list['1']['valid_uids'] = FRIENDS_BOL_Service::getInstance()->findFriendIdList($uid,0,1000);;
+            $data['valid_uids'] = $final_list;
+        }
 
 
         $options = array(

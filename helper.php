@@ -468,7 +468,8 @@ class IflychatHelper {
             'iflychat_stop_links' => '1',
             'iflychat_allow_anon_links' => '1',
             'iflychat_allow_render_images' => '1',
-            'iflychat_enable_search_bar' => '1'
+            'iflychat_enable_search_bar' => '1',
+            'iflychat_enable_friends' => '1'
         );
 
         return $dVal["$field"];

@@ -553,6 +553,15 @@ class IFLYCHAT_ConfigSaveForm extends Form {
         ));
         $this->addElement($selectField);
 
+        $selectField = new Selectbox("iflychat_enable_friends");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_FRIENDS"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_FRIENDS_DESC"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "No",
+            "2" => "Yes"
+        ));
+        $this->addElement($selectField);
 
 
         $submit = new Submit('submit');
