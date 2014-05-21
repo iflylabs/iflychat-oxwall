@@ -62,9 +62,18 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
             'chat_type' => $obj->params('iflychat_show_admin_list'),
             'guestPrefix' => $obj->params('iflychat_anon_prefix'),
             'changeurl' => '',
-            'allowSmileys' => $obj->params('iflychat_enable_smileys')
+            'allowSmileys' => $obj->params('iflychat_enable_smileys'),
+            'admin' => $this->iflychat_check_chat_admin()?'1':'0'
 
         );
+        if($this->iflychat_check_chat_admin()) {
+
+            $iflychat_settings['arole'] = $this->roleArray();;
+
+
+        }
+
+
 
         $iflychat_settings['iup'] = $obj->params('iflychat_user_picture');
         if($params['iflychat_user_picture']=$obj->params('iflychat_user_picture')) {
@@ -102,6 +111,18 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
         $iflychat_settings['text_nmm'] = $language->text('iflychat','MOD_NO_MORE_MESSAGES');
         $iflychat_settings['text_clear_room'] = $language->text('iflychat','MOD_CLEAR_ALL_MESSAGES');
         $iflychat_settings['msg_p'] = $language->text('iflychat','MOD_TYPE_AND_PRESS_ENTER');
+
+        if($this->iflychat_check_chat_admin()) {
+            $iflychat_settings['text_ban'] = $language->text('iflychat','MOD_BAN');//__('Ban', 'iflychat');
+            $iflychat_settings['text_ban_ip'] = $language->text('iflychat','MOD_BAN_IP');//__('Ban IP', 'iflychat');
+            $iflychat_settings['text_kick'] = $language->text('iflychat','MOD_KICK');//__('Kick', 'iflychat');
+            $iflychat_settings['text_ban_window_title'] = $language->text('iflychat','MOD_BANNED_USERS');//__('Banned Users', 'iflychat');
+            $iflychat_settings['text_ban_window_default'] = $language->text('iflychat','MOD_NO_BAN');//__('No users have been banned currently.', 'iflychat');
+            $iflychat_settings['text_ban_window_loading'] = $language->text('iflychat','MOD_LOADING');//__('Loading banned user list...', 'iflychat');
+            $iflychat_settings['text_manage_rooms'] = $language->text('iflychat','MOD_MANAGE_ROOMS');//__('Manage Rooms', 'iflychat');
+            $iflychat_settings['text_unban'] = $language->text('iflychat','MOD_UNBAN');//__('Unban', 'iflychat');
+            $iflychat_settings['text_unban_ip'] = $language->text('iflychat','MOD_UNBAN_IP');//__('Unban IP', 'iflychat');
+        }
         if(($obj->params('iflychat_show_admin_list') == 1)) {
             $iflychat_settings['text_support_chat_init_label'] = $obj->params('iflychat_support_chat_init_label');
             $iflychat_settings['text_support_chat_box_header'] = $obj->params('iflychat_support_chat_box_header');
@@ -132,5 +153,20 @@ if($obj->iflychat_path_check()){
         OW::getDocument()->addScriptDeclarationBeforeIncludes('window.my_var_handle ="' . OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . '"');
         return parent::render();
 } }
+     function iflychat_check_chat_admin(){
 
+    if(OW_User::getInstance()->isAdmin()){
+        return TRUE;
+    }else
+        return FALSE;
+    }
+    function roleArray() {
+        $arr = BOL_AuthorizationRoleDao::getInstance()->findAll();
+        $roleArr=array();
+        for($i=0;$i<sizeof($arr);$i++){
+            $roleArr +=  array($arr[$i]->id => $arr[$i]->name);
+
+        }
+        return $roleArr;
+    }
 }

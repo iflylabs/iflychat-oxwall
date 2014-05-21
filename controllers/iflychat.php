@@ -73,6 +73,10 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
             $data['valid_uids'] = $final_list;
         }
 
+        if($obj->params('iflychat_user_picture') == 1){
+            $data['up'] = $obj->iflychat_get_user_pic_url();
+        }
+            $data['upl'] = $obj->iflychat_get_user_profile_url();
 
         $options = array(
             'method' => 'POST',
@@ -81,7 +85,7 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
             'headers' => array('Content-Type' => 'application/json'),
         );
 
-     if(OW_User::getInstance()->isAuthorized('iflychat', 'add_chat')){
+     if(OW_User::getInstance()->isAuthorized('iflychat', 'add_chat') && !($data['rel']==1 && $uid==0)){
 
         $uri = IFLYCHAT_EXTERNAL_A_HOST . ':' . IFLYCHAT_EXTERNAL_A_PORT .  '/p/';
     try {

@@ -499,7 +499,7 @@ class IflychatHelper {
         }
     }
 
-    function iflychat_path_check() {
+    public function iflychat_path_check() {
         $page_match = FALSE;
         if (trim($this->params('iflychat_path_pages')) != '') {
             if(function_exists('mb_strtolower')) {
@@ -518,7 +518,7 @@ class IflychatHelper {
         }
         return $page_match;
     }
-    function iflychat_match_path($path, $patterns) {
+    public function iflychat_match_path($path, $patterns) {
         $to_replace = array(
             '/(\r\n?|\n)/',
             '/\\\\\*/',
