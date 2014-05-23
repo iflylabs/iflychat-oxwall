@@ -18,6 +18,7 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
     {
 
         $obj = new iflychatHelper;
+        $variable_get = $obj->params('iflychat_ext_d_i');
         $language = OW::getLanguage();
         $this->setPageHeading($language->text("iflychat", "iflychat_setting_page"));
         $this->setPageHeadingIconClass('ow_ic_gear_wheel');
@@ -33,9 +34,6 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
         { if ( $form->process($_POST) ){
 
             $data = $form->getValues();
-
-            $variable_get = $obj->params('iflychat_ext_d_i');
-
 
             define('IFLYCHAT_EXTERNAL_HOST', 'http://api'.$variable_get.'.iflychat.com');
             define('IFLYCHAT_EXTERNAL_PORT', '80');
@@ -55,7 +53,7 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
                 'chat_list_header' => $data['iflychat_chat_list_header'],
                 'public_chatroom_header' => $data['iflychat_public_chatroom_header'],
                 'rel' => $data['iflychat_rel'],
-                'version' => 'Oxwall-1.6.0',
+                'version' => 'Oxwall-1.0.1',
                 'show_admin_list' => $data['iflychat_show_admin_list'],
                 'clear' => $data['iflychat_allow_single_message_delete'],
                 'delmessage' => $data['iflychat_allow_clear_room_history'],
@@ -76,8 +74,7 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
             );
 
 
-            $uri = IFLYCHAT_EXTERNAL_A_HOST . ':' . IFLYCHAT_EXTERNAL_A_PORT .  '/p/';
-
+            $uri = IFLYCHAT_EXTERNAL_A_HOST . ':' . IFLYCHAT_EXTERNAL_A_PORT .  '/z/';
 
             $obj->iflychat_extended_http_request($uri, $options);
 
@@ -105,7 +102,7 @@ $default = array(
     'iflychat_anon_use_name' => '1',
     'iflychat_anon_change_name' => '1',
     'iflychat_load_chat_async' => '1',
-    'iflychat_ext_d_i' => '',
+    'iflychat_ext_d_i' => '3',
     'iflychat_support_chat_init_label' => 'Chat with us',
     'iflychat_support_chat_box_header' => 'Support',
     'iflychat_support_chat_box_company_name' => 'Support Team',
