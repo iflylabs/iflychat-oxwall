@@ -440,7 +440,7 @@ class IflychatHelper {
     private function defaultValue($field) {
 
         $dVal = array (
-            'iflychat_ext_d_i' => '',
+            'iflychat_ext_d_i' => '3',
             'iflychat_external_api_key' => 'NULL',
             'iflychat_theme' => '1',
             'iflychat_notification_sound' => '1',

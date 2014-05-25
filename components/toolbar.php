@@ -54,7 +54,7 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
             'sound' => OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . 'swf/sound.swf',
             'soundFile' => OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . 'wav/notification.mp3',
             'noUsers' => '',
-            'smileyURL' => OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl(),
+            'smileyURL' => OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . 'smileys/very_emotional_emoticons-png/png-32x32/',
             'addUrl' => '',
             'notificationSound' => $obj->params('iflychat_notification_sound'),
             'exurl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/auth',
