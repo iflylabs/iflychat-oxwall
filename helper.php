@@ -531,41 +531,6 @@ class IflychatHelper {
         $regexps[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
         return (bool) preg_match($regexps[$patterns], $path);
     }
-    public function processCleanUp() {
 
-        OW_ViewRenderer::getInstance()->clearCompiledTpl();
-
-
-
-        OW::getCacheManager()->clean(array(),OW_CacheManager::CLEAN_ALL);
-
-
-        OW::getThemeManager()->getThemeService()->processAllThemes();
-
-
-        $pluginService = BOL_PluginService::getInstance();
-        $activePlugins = $pluginService->findActivePlugins();
-
-        /* @var $pluginDto BOL_Plugin */
-        foreach ( $activePlugins as $pluginDto )
-        {
-            $pluginStaticDir = OW_DIR_PLUGIN . $pluginDto->getModule() . DS . 'static' . DS;
-
-            if ( file_exists($pluginStaticDir) )
-            {
-                $staticDir = OW_DIR_STATIC_PLUGIN . $pluginDto->getModule() . DS;
-
-                if ( file_exists($staticDir) )
-                {
-                    UTIL_File::removeDir($staticDir);
-                }
-                mkdir($staticDir);
-                chmod($staticDir, 0777);
-
-                UTIL_File::copyDir($pluginStaticDir, $staticDir);
-            }
-        }
-
-    }
 
 }

@@ -28,7 +28,7 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
         $this->assign('configs', $configs);
         $form = new IFLYCHAT_ConfigSaveForm($configs);
         $this->addForm($form);
-        $obj->processCleanUp();
+
 
         if( OW::getRequest()->isPost() && $form->isValid($_POST) )
         { if ( $form->process($_POST) ){
