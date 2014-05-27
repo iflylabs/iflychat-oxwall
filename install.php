@@ -16,6 +16,7 @@ OW::getLanguage()->importPluginLangs(OW::getPluginManager()->getPlugin('iflychat
 
 OW_ViewRenderer::getInstance()->clearCompiledTpl();
 OW::getCacheManager()->clean(array(),OW_CacheManager::CLEAN_ALL);
+
 $authorization = OW::getAuthorization();
 $groupName = 'iflychat';
 $authorization->addGroup($groupName);

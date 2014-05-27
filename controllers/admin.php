@@ -28,7 +28,7 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
         $this->assign('configs', $configs);
         $form = new IFLYCHAT_ConfigSaveForm($configs);
         $this->addForm($form);
-
+       
 
         if( OW::getRequest()->isPost() && $form->isValid($_POST) )
         { if ( $form->process($_POST) ){
@@ -67,8 +67,9 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
                 'enable_guest_change_name' => $data['iflychat_anon_change_name'],
                 'use_stop_word_list' => $data['iflychat_use_stop_word_list'],
                 'stop_word_list' => $data['iflychat_stop_word_list'],
+                'file_attachment' => ($data['iflychat_enable_file_attachment'] == "1")?'1':'2',
+                'mobile_browser_app' => ($data['iflychat_enable_mobile_browser_app'] == "1")?'1':'2'
             );
-
 
 
             $options = array(
@@ -235,6 +236,16 @@ class IFLYCHAT_ConfigSaveForm extends Form {
         $selectField = new Selectbox("iflychat_enable_smileys");
         $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_SMILEYS"));
         $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_SMILEYS_DESC"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
+
+        $selectField = new Selectbox("iflychat_enable_mobile_browser_app");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_MOBILE_BROWSER_APP"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_MOBILE_BROWSER_APP_DESC"));
         $selectField->setValue('1');
         $selectField->setOptions(array(
             "1" => "Yes",
@@ -438,6 +449,16 @@ class IFLYCHAT_ConfigSaveForm extends Form {
         $selectField = new Selectbox("iflychat_allow_render_images");
         $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ALLOW_RENDER_IMAGES"));
         $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_ALLOW_RENDER_IMAGES_DESC"));
+        $selectField->setValue('1');
+        $selectField->setOptions(array(
+            "1" => "Yes",
+            "2" => "No"
+        ));
+        $this->addElement($selectField);
+
+        $selectField = new Selectbox("iflychat_enable_file_attachment");
+        $selectField->setLabel($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_FILE_ATTACHMENT"));
+        $selectField->setDescription($language->text("iflychat", "MOD_IFLYCHAT_ENABLE_FILE_ATTACHMENT_DESC"));
         $selectField->setValue('1');
         $selectField->setOptions(array(
             "1" => "Yes",

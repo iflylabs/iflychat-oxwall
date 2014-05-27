@@ -469,7 +469,9 @@ class IflychatHelper {
             'iflychat_allow_anon_links' => '1',
             'iflychat_allow_render_images' => '1',
             'iflychat_enable_search_bar' => '1',
-            'iflychat_enable_friends' => '1'
+            'iflychat_enable_friends' => '1',
+            'iflychat_enable_file_attachment' => '1',
+            'iflychat_enable_mobile_browser_app' => '1'
         );
 
         return $dVal["$field"];
@@ -531,6 +533,6 @@ class IflychatHelper {
         $regexps[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
         return (bool) preg_match($regexps[$patterns], $path);
     }
-
+    
 
 }

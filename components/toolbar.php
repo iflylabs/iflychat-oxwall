@@ -58,6 +58,7 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
             'addUrl' => '',
             'notificationSound' => $obj->params('iflychat_notification_sound'),
             'exurl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/auth',
+            'mobileWebUrl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/mobileauth',
             'soffurl' => '',
             'chat_type' => $obj->params('iflychat_show_admin_list'),
             'guestPrefix' => $obj->params('iflychat_anon_prefix'),

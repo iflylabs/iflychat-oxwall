@@ -15,15 +15,14 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
     public function auth() {
 
         $obj = new iflychatHelper;
-      //  $variable_get = '3';
+
 
         $variable_get = $obj->params('iflychat_ext_d_i');
 
         header('Content-type: application/json');
         $settingJson  = OW::getConfig()->getValue('iflychat', 'setting_vars');
         $settingArray = (array)json_decode($settingJson);
-     //$id = OW::getUser()->getId();
-     //  print_r(BOL_AvatarService::getInstance()->getAvatarUrl($id));exit;
+
         define('IFLYCHAT_EXTERNAL_HOST', 'http://api'.$variable_get.'.iflychat.com');
         define('IFLYCHAT_EXTERNAL_PORT', '80');
         define('IFLYCHAT_EXTERNAL_A_HOST', 'https://api'.$variable_get.'.iflychat.com');
@@ -146,5 +145,41 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
     }
 
     }
+//Mobile auth
+    public function mobileAuth() {
 
+        $obj = new iflychatHelper;
+
+
+        $variable_get = $obj->params('iflychat_ext_d_i');
+
+        define('IFLYCHAT_EXTERNAL_HOST', 'http://api'.$variable_get.'.iflychat.com');
+        define('IFLYCHAT_EXTERNAL_PORT', '80');
+        define('IFLYCHAT_EXTERNAL_A_HOST', 'https://api'.$variable_get.'.iflychat.com');
+        define('IFLYCHAT_EXTERNAL_A_PORT', '443');
+
+        $data = array('settings' => array());
+        $data['settings']['authUrl'] = OW::getRouter()->getBaseUrl().'iflychat/iflychat/auth';
+        $data['settings']['host'] = (($obj->isSSL())?(IFLYCHAT_EXTERNAL_A_HOST):(IFLYCHAT_EXTERNAL_HOST));
+        $data['settings']['port'] = (($obj->isSSL())?(IFLYCHAT_EXTERNAL_A_PORT):(IFLYCHAT_EXTERNAL_PORT));
+//Http request
+        $result = $obj->iflychat_extended_http_request(IFLYCHAT_EXTERNAL_A_HOST . ':' . IFLYCHAT_EXTERNAL_A_PORT .  '/m/v1/app/', array(
+                'method' => 'POST',
+                'body' => $data,
+                'timeout' => 15,
+                'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
+            ));
+
+        if(($result->code == 200)) {
+            $o = $result->data;
+        }
+        else {
+            print $result->code;
+        }
+        print_r($o);
+        exit();
+    }
 }
+
+
+
