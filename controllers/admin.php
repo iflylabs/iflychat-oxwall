@@ -35,11 +35,6 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
 
             $data = $form->getValues();
 
-            // Iflychat_BOL_Service::getInstance()->processCleanUp();
-            $variable_get = $obj->params('iflychat_ext_d_i');
-
-
-
             define('IFLYCHAT_EXTERNAL_HOST', 'http://api'.$variable_get.'.iflychat.com');
             define('IFLYCHAT_EXTERNAL_PORT', '80');
             define('IFLYCHAT_EXTERNAL_A_HOST', 'https://api'.$variable_get.'.iflychat.com');
@@ -58,7 +53,7 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
                 'chat_list_header' => $data['iflychat_chat_list_header'],
                 'public_chatroom_header' => $data['iflychat_public_chatroom_header'],
                 'rel' => $data['iflychat_rel'],
-                'version' => 'Oxwall-1.0.1',
+                'version' => 'Oxwall-1.0.3',
                 'show_admin_list' => $data['iflychat_show_admin_list'],
                 'clear' => $data['iflychat_allow_single_message_delete'],
                 'delmessage' => $data['iflychat_allow_clear_room_history'],

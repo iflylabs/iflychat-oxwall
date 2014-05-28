@@ -165,9 +165,9 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
 //Http request
         $result = $obj->iflychat_extended_http_request(IFLYCHAT_EXTERNAL_A_HOST . ':' . IFLYCHAT_EXTERNAL_A_PORT .  '/m/v1/app/', array(
                 'method' => 'POST',
-                'body' => $data,
+                'data' => json_encode($data),
                 'timeout' => 15,
-                'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
+                'headers' => array('Content-Type' => 'application/json'),
             ));
 
         if(($result->code == 200)) {
@@ -176,7 +176,7 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
         else {
             print $result->code;
         }
-        print_r($o);
+        print $o;
         exit();
     }
 }
