@@ -503,6 +503,12 @@ class IflychatHelper {
 
     public function iflychat_path_check() {
         $page_match = FALSE;
+//Check default path
+        if($this->default_path()){
+            return FALSE;
+
+        }
+
         if (trim($this->params('iflychat_path_pages')) != '') {
             if(function_exists('mb_strtolower')) {
                 $pages = mb_strtolower($this->params('iflychat_path_pages'));
@@ -532,6 +538,19 @@ class IflychatHelper {
         $patterns_quoted = preg_quote($patterns, '/');
         $regexps[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';
         return (bool) preg_match($regexps[$patterns], $path);
+    }
+    // Chat not load on default path
+    public function default_path(){
+
+        $defaultPath = 'base/media-panel';
+        $path = mb_strtolower(OW::getRouter()->getUri());
+        $var = explode("/", $path);;
+        $path = $var[0]."/".$var[1];
+        $page_match = $this->iflychat_match_path($path, $defaultPath);
+
+
+        return $page_match;
+
     }
     
 
