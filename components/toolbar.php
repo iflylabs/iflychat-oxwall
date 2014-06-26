@@ -77,7 +77,7 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
 
 
         $iflychat_settings['iup'] = $obj->params('iflychat_user_picture');
-        if($params['iflychat_user_picture']=$obj->params('iflychat_user_picture')) {
+        if($obj->params('iflychat_user_picture')==1) {
             $iflychat_settings['default_up'] = OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . 'themes/' . $iflychat_theme . '/images/default_avatar.png';
             $iflychat_settings['default_cr'] = OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . 'themes/' . $iflychat_theme . '/images/default_room.png';
             $iflychat_settings['default_team'] = OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . 'themes/' . $iflychat_theme . '/images/default_team.png';
