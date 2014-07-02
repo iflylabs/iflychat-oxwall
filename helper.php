@@ -15,22 +15,6 @@ class IflychatHelper {
 
         return 'check';
     }
-    public function iflychat_check_chat_admin(){
-
-        if(OW_User::getInstance()->isAdmin()){
-            return TRUE;
-        }else
-            return FALSE;
-    }
-    public function roleArray() {
-        $arr = BOL_AuthorizationRoleDao::getInstance()->findAll();
-        $roleArr=array();
-        for($i=0;$i<sizeof($arr);$i++){
-            $roleArr +=  array($arr[$i]->id => $arr[$i]->name);
-
-        }
-        return $roleArr;
-    }
     private function iflychat_timer_read($name) {
         //global $this->timers;
 
