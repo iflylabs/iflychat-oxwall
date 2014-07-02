@@ -544,13 +544,14 @@ class IflychatHelper {
 
         $defaultPath = 'base/media-panel';
         $path = mb_strtolower(OW::getRouter()->getUri());
-        $var = explode("/", $path);;
+        $var = explode("/", $path);
+        if(!empty($var[1])){
         $path = $var[0]."/".$var[1];
         $page_match = $this->iflychat_match_path($path, $defaultPath);
 
-
         return $page_match;
-
+        }
+        else return null;
     }
     
 
