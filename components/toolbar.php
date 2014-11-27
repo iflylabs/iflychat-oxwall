@@ -62,14 +62,14 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
             'soffurl' => '',
             'chat_type' => $obj->params('iflychat_show_admin_list'),
             'guestPrefix' => $obj->params('iflychat_anon_prefix'),
-            'changeurl' => '',
+            'changeurl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/changeguestname',
             'allowSmileys' => $obj->params('iflychat_enable_smileys'),
-            'admin' => $this->iflychat_check_chat_admin()?'1':'0'
+            'admin' => $obj->iflychat_check_chat_admin()?'1':'0'
 
         );
-        if($this->iflychat_check_chat_admin()) {
+        if($obj->iflychat_check_chat_admin()) {
 
-            $iflychat_settings['arole'] = $this->roleArray();;
+            $iflychat_settings['arole'] = $obj->roleArray();;
 
 
         }
@@ -113,7 +113,7 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
         $iflychat_settings['text_clear_room'] = $language->text('iflychat','MOD_CLEAR_ALL_MESSAGES');
         $iflychat_settings['msg_p'] = $language->text('iflychat','MOD_TYPE_AND_PRESS_ENTER');
 
-        if($this->iflychat_check_chat_admin()) {
+        if($obj->iflychat_check_chat_admin()) {
             $iflychat_settings['text_ban'] = $language->text('iflychat','MOD_BAN');//__('Ban', 'iflychat');
             $iflychat_settings['text_ban_ip'] = $language->text('iflychat','MOD_BAN_IP');//__('Ban IP', 'iflychat');
             $iflychat_settings['text_kick'] = $language->text('iflychat','MOD_KICK');//__('Kick', 'iflychat');
@@ -154,20 +154,4 @@ if($obj->iflychat_path_check()){
         OW::getDocument()->addScriptDeclarationBeforeIncludes('window.my_var_handle ="' . OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . '"');
         return parent::render();
 } }
-     function iflychat_check_chat_admin(){
-
-    if(OW_User::getInstance()->isAdmin()){
-        return TRUE;
-    }else
-        return FALSE;
-    }
-    function roleArray() {
-        $arr = BOL_AuthorizationRoleDao::getInstance()->findAll();
-        $roleArr=array();
-        for($i=0;$i<sizeof($arr);$i++){
-            $roleArr +=  array($arr[$i]->id => $arr[$i]->name);
-
-        }
-        return $roleArr;
-    }
 }
