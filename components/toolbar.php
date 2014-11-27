@@ -57,24 +57,19 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
             'smileyURL' => OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . 'smileys/very_emotional_emoticons-png/png-32x32/',
             'addUrl' => '',
             'notificationSound' => $obj->params('iflychat_notification_sound'),
-            'exurl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/auth',
+            'geturl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/auth',
             'mobileWebUrl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/mobileauth',
             'soffurl' => '',
             'chat_type' => $obj->params('iflychat_show_admin_list'),
             'guestPrefix' => $obj->params('iflychat_anon_prefix'),
-            'changeurl' => '',
+            'changeurl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/changeguestname',
             'allowSmileys' => $obj->params('iflychat_enable_smileys'),
-            'admin' => $this->iflychat_check_chat_admin()?'1':'0'
-
+            'admin' => $obj->iflychat_check_chat_admin()?'1':'0',
+            'theme' => $iflychat_theme,
         );
-        if($this->iflychat_check_chat_admin()) {
-
-            $iflychat_settings['arole'] = $this->roleArray();;
-
-
+        if($obj->iflychat_check_chat_admin()) {
+            $iflychat_settings['arole'] = $obj->roleArray();;
         }
-
-
 
         $iflychat_settings['iup'] = $obj->params('iflychat_user_picture');
         if($obj->params('iflychat_user_picture')==1) {
@@ -113,7 +108,7 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
         $iflychat_settings['text_clear_room'] = $language->text('iflychat','MOD_CLEAR_ALL_MESSAGES');
         $iflychat_settings['msg_p'] = $language->text('iflychat','MOD_TYPE_AND_PRESS_ENTER');
 
-        if($this->iflychat_check_chat_admin()) {
+        if($obj->iflychat_check_chat_admin()) {
             $iflychat_settings['text_ban'] = $language->text('iflychat','MOD_BAN');//__('Ban', 'iflychat');
             $iflychat_settings['text_ban_ip'] = $language->text('iflychat','MOD_BAN_IP');//__('Ban IP', 'iflychat');
             $iflychat_settings['text_kick'] = $language->text('iflychat','MOD_KICK');//__('Kick', 'iflychat');
@@ -139,8 +134,6 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
             $iflychat_settings['text_support_chat_init_label_off'] = $obj->params('iflychat_support_chat_init_label_off');
         }
         $iflychat_settings['open_chatlist_default'] = ($obj->params('iflychat_minimize_chat_user_list')==2)?'1':'2';
-
-
         $iflychat_settings['useStopWordList'] = $obj->params('iflychat_use_stop_word_list');
         $iflychat_settings['blockHL'] = $obj->params('iflychat_stop_links');
         $iflychat_settings['allowAnonHL'] = $obj->params('iflychat_allow_anon_links');
@@ -149,25 +142,13 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
         $iflychat_settings['text_search_bar'] = $language->text('iflychat','MOD_TYPE_HERE_TO_SEARCH');
 
 if($obj->iflychat_path_check()){
-        OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('iflychat')->getStaticJsUrl() . 'iflychat.js');
-        OW::getDocument()->addScriptDeclarationBeforeIncludes("Drupal={};Drupal.settings={};Drupal.settings.drupalchat=" . json_encode($iflychat_settings).";\n ");
+        if(($obj->params('iflychat_show_admin_list') == 1)) {
+            OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('iflychat')->getStaticJsUrl() . 'ba-emotify.js');
+            OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('iflychat')->getStaticJsUrl() . 'jquery.titlealert.min.js');
+        }
+        OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('iflychat')->getStaticJsUrl() . 'iflychat.min.js');
+        OW::getDocument()->addScriptDeclarationBeforeIncludes("iflychat = " . json_encode($iflychat_settings).";\n ");
         OW::getDocument()->addScriptDeclarationBeforeIncludes('window.my_var_handle ="' . OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . '"');
         return parent::render();
 } }
-     function iflychat_check_chat_admin(){
-
-    if(OW_User::getInstance()->isAdmin()){
-        return TRUE;
-    }else
-        return FALSE;
-    }
-    function roleArray() {
-        $arr = BOL_AuthorizationRoleDao::getInstance()->findAll();
-        $roleArr=array();
-        for($i=0;$i<sizeof($arr);$i++){
-            $roleArr +=  array($arr[$i]->id => $arr[$i]->name);
-
-        }
-        return $roleArr;
-    }
 }

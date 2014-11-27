@@ -179,6 +179,35 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
         print $o;
         exit();
     }
+
+    //Change guest name callback
+    public function changeGuestName() {     
+      if( version_compare(phpversion(), '5.4.0', '>=') ) {
+        if(session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+      } else {
+        if(session_id() === '') {
+          session_start();
+        }
+      }
+      $obj = new iflychatHelper;
+      $settingJson  = OW::getConfig()->getValue('iflychat', 'setting_vars');
+      $settingArray = (array)json_decode($settingJson);
+      if((OW::getUser()->getId() == 0) && isset($_POST) && isset($_POST['drupalchat_guest_new_name']) && ($settingArray['iflychat_anon_change_name']==1)) {
+        $new_name = $obj->check_plain($settingArray['iflychat_anon_prefix'] . " " . $_POST['drupalchat_guest_new_name']);
+        $_SESSION['iflychat_guest_name'] = $new_name;
+        setrawcookie('iflychat_guest_name', rawurlencode($new_name), time()+60*60*24*365, '/');
+        header("Content-Type: application/json");
+        echo json_encode(array());
+        exit;
+      }
+      else {
+        header("Content-Type: application/json");
+        echo json_encode(array());
+        exit;
+      }
+    }
 }
 
 

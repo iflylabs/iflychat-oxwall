@@ -11,10 +11,10 @@ class IflychatHelper {
     private $timers;
 
 
-    public function check(){
+    // public function check(){
 
-        return 'check';
-    }
+    //     return 'check';
+    // }
     public function iflychat_check_chat_admin(){
 
         if(OW_User::getInstance()->isAdmin()){
