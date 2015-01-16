@@ -60,7 +60,10 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
             'rel' => '0'
         );
 
-
+        //Add aRole paramter in data array
+        if($role == 'admin'){
+            $data['aRole'] = $obj->roleArray();
+        }
 
         //Get friend's id
         if($obj->params('iflychat_enable_friends')==2 && is_array(FRIENDS_BOL_Service::getInstance()->findAllActiveFriendships())){
