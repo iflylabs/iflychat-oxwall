@@ -30,7 +30,6 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
         $uid = OW::getUser()->getId();
         $uname = ($uid)?BOL_UserService::getInstance()->findUserById($uid)->username:'';
 
-
         if(OW_User::getInstance()->isAdmin() || OW_User::getInstance()->isAuthorized('iflychat', 'mod') ) {
             $role = 'admin';
         }else {
@@ -62,7 +61,7 @@ class IFLYCHAT_CTRL_iflychat extends OW_ActionController {
 
         //Add aRole paramter in data array
         if($role == 'admin'){
-            $data['aRole'] = $obj->roleArray();
+            $data['allRoles'] = $obj->roleArray();
         }
 
         //Get friend's id
