@@ -57,7 +57,7 @@ class IFLYCHAT_CMP_Toolbar extends OW_Component
             'smileyURL' => OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . 'smileys/very_emotional_emoticons-png/png-32x32/',
             'addUrl' => '',
             'notificationSound' => $obj->params('iflychat_notification_sound'),
-            'geturl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/auth',
+            'exurl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/auth',
             'mobileWebUrl' => OW::getRouter()->getBaseUrl().'iflychat/iflychat/mobileauth',
             'soffurl' => '',
             'chat_type' => $obj->params('iflychat_show_admin_list'),
@@ -146,8 +146,8 @@ if($obj->iflychat_path_check()){
             OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('iflychat')->getStaticJsUrl() . 'ba-emotify.js');
             OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('iflychat')->getStaticJsUrl() . 'jquery.titlealert.min.js');
         }
-        OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('iflychat')->getStaticJsUrl() . 'iflychat.min.js');
-        OW::getDocument()->addScriptDeclarationBeforeIncludes("iflychat = " . json_encode($iflychat_settings).";\n ");
+        OW::getDocument()->addScript(OW::getPluginManager()->getPlugin('iflychat')->getStaticJsUrl() . 'iflychat.js');
+        OW::getDocument()->addScriptDeclarationBeforeIncludes("Drupal={};Drupal.settings={};Drupal.settings.drupalchat=" . json_encode($iflychat_settings).";\n ");
         OW::getDocument()->addScriptDeclarationBeforeIncludes('window.my_var_handle ="' . OW::getPluginManager()->getPlugin('iflychat')->getStaticUrl() . '"');
         return parent::render();
 } }
