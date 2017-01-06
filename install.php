@@ -8,7 +8,7 @@
  * @link https://iflychat.com
  */
 
-//OW::getConfig()->addConfig('iflychat', 'setting_vars', '{}');
+
 $config = OW::getConfig();
 
 if (!$config->configExists('iflychat', 'iflychat_external_api_key')) {

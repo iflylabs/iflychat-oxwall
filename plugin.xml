@@ -8,7 +8,7 @@
     <authorEmail>support@iflylabs.com</authorEmail>
 	<authorUrl>https://iflychat.com</authorUrl>
 	<developerKey>8c9a3ad5afd04feaf91851fdd2d30086</developerKey>
-    <build>9</build>
+    <build>10</build>
     <copyright>(C) 2009 Oxwall Foundation. All rights reserved.</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <licenseUrl>http://www.opensource.org/licenses/bsd-license.php</licenseUrl>
