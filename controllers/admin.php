@@ -86,7 +86,7 @@ class IFLYCHAT_CTRL_Admin extends ADMIN_CTRL_Abstract {
                 $_SESSION['token'] = $response->key;
       $token = $response->key;
     }
-    $dashboardUrl = "//" . IFLYCHAT_EXTERNAL_CDN_HOST . "/apps/dashboard/#/app-settings?sessid=" . $token . "&hostName=" . $host_name . "&hostPort=" . IFLYCHAT_EXTERNAL_A_PORT;
+    $dashboardUrl = "https://" . IFLYCHAT_EXTERNAL_CDN_HOST . "/apps/dashboard/#/app-settings?sessid=" . $token . "&hostName=" . $host_name . "&hostPort=" . IFLYCHAT_EXTERNAL_A_PORT;
     header('Location: '.$dashboardUrl);
   }
 }
