@@ -1,11 +1,12 @@
 
 jQuery(document).ready(function(){
-    jQuery('[name = "iflychat_show_admin_list"]').change(function() {
-        if (jQuery('[name = "iflychat_show_admin_list"]').val() == '1') {
-            jQuery('.support').fadeIn();
+    jQuery('[name = "iflychat_show_popup_chat"]').change(function() {
+        if (jQuery('[name = "iflychat_show_popup_chat"]').val() == '3' || jQuery('[name = "iflychat_show_popup_chat"]').val() == '4') {
+            jQuery('.textBox').fadeIn();
+
         }
         else {
-            jQuery('.support').hide();
+            jQuery('.textBox').fadeOut();
         }
-    });jQuery('[name = "iflychat_show_admin_list"]').change();
+    });jQuery('[name = "iflychat_show_popup_chat"]').change();
 });
